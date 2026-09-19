@@ -1,7 +1,7 @@
 // ============================================================
 // NANZMUSIFY - CORE PLAYER (FULL FIX)
 // ============================================================
-const API_BASE=(window.NANZ_API_BASE||'/api/nanz').replace(/\/$/,''); const API={search:API_BASE+'/search',artist:API_BASE+'/artist',suggest:API_BASE+'/suggest',lyrics:API_BASE+'/lyrics',ytplay:API_BASE+'/ytplay',proxyAudio:API_BASE+'/proxy-audio',proxyImage:API_BASE+'/proxy-image'};
+const API_BASE=(window.NANZ_API_BASE||'/api/nanz').replace(/\/$/,''); window.NANZ_API_BASE=API_BASE; const API={search:API_BASE+'/search',artist:API_BASE+'/artist',suggest:API_BASE+'/suggest',lyrics:API_BASE+'/lyrics',ytplay:API_BASE+'/ytplay',proxyAudio:API_BASE+'/proxy-audio',proxyImage:API_BASE+'/proxy-image'};
 const FI='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2523374151%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%22100%2525%22%20height%3D%22100%2525%22%20fill%3D%22%252318181b%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%252327272a%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M9%2017V5l10-2v12%22%20stroke%3D%22%252352525b%22%20stroke-width%3D%221%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2217%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2215%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E';
 
 function toWebp(url) {
