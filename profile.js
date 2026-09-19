@@ -11,14 +11,14 @@ var Profile = {
                 <i data-lucide="music" class="w-12 h-12 text-white/60 absolute"></i>
                 <img src="/logo.png" class="absolute inset-0 w-full h-full object-cover" onerror="this.style.display='none'" />
             </div>
-            <h1 class="text-3xl font-black chrome-text mb-1">NanzMusify</h1>
+            <h1 class="text-3xl font-black chrome-text mb-1">VidzzMusify</h1>
             <p class="text-[#b3b3b3] text-sm mb-6">Streaming Musik YouTube dengan Lirik</p>
             
             <div class="glass rounded-2xl p-5 max-w-sm mx-auto space-y-3 text-left mb-6">
                 <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
                     <i data-lucide="smartphone" class="w-4 h-4 text-rose-400"></i> Aplikasi & PWA
                 </h3>
-                <div class="flex justify-between"><span class="text-white/70 text-sm">Nama</span><span class="text-white font-medium text-sm">NanzMusify</span></div>
+                <div class="flex justify-between"><span class="text-white/70 text-sm">Nama</span><span class="text-white font-medium text-sm">VidzzMusify</span></div>
                 <div class="flex justify-between"><span class="text-white/70 text-sm">Versi</span><span class="text-white font-medium text-sm">v2.0.0</span></div>
                 <div class="flex justify-between"><span class="text-white/70 text-sm">Mode Offline PWA</span><span class="text-emerald-400 font-bold text-sm flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Aktif</span></div>
                 <div class="flex justify-between"><span class="text-white/70 text-sm">Service Worker</span><span class="text-white font-medium text-sm">${'serviceWorker' in navigator ? 'Terdaftar' : 'Tidak didukung'}</span></div>
@@ -36,7 +36,7 @@ var Profile = {
                     <span class="text-white/70 text-sm font-medium">Developed by</span>
                     <div class="flex items-center gap-2">
                         <img src="/dev.png" class="w-6 h-6 rounded-full object-cover border border-white/10" referrerPolicy="no-referrer" onerror="this.src='/logo.png'" />
-                        <span class="text-white font-bold text-sm">Nanzz</span>
+                        <span class="text-white font-bold text-sm">Vidzz</span>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@ var Profile = {
                 <i data-lucide="download" class="w-5 h-5"></i> Install Aplikasi
             </button>
 
-            <a href="https://whatsapp.com/channel/0029VbCsS2r2phHIV3O0nO1a" target="_blank" class="block w-full max-w-sm mx-auto btn-chrome font-bold py-4 rounded-full active:scale-95 transition-all text-center flex items-center justify-center gap-2">
+            <a href="https://whatsapp.com/channel/0029VbBZDhZ9hXFBRU0xuV12" target="_blank" class="block w-full max-w-sm mx-auto btn-chrome font-bold py-4 rounded-full active:scale-95 transition-all text-center flex items-center justify-center gap-2">
                 <i data-lucide="message-circle" class="w-5 h-5"></i> Gabung Channel WhatsApp
             </a>
         </div>`;
