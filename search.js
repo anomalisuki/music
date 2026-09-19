@@ -253,15 +253,22 @@ var Search = {
                 Search.show();
             }
         });
+        var suggestTimer = null;
+        var suggestController = null;
         si.addEventListener('input', function() {
             var q = this.value.trim();
+            if (suggestTimer) clearTimeout(suggestTimer);
+            if (suggestController) { try { suggestController.abort(); } catch(e) {} }
             if (!q) {
                 gid('suggestions').classList.add('hidden');
                 return;
             }
-            fetch(API.suggest + '?q=' + encodeURIComponent(q)).then(function(r) {
-                return r.json();
-            }).then(function(s) {
+            suggestTimer = setTimeout(function() {
+                suggestController = window.AbortController ? new AbortController() : null;
+                fetch(API.suggest + '?q=' + encodeURIComponent(q), suggestController ? {signal:suggestController.signal} : undefined).then(function(r) {
+                    if (!r.ok) throw new Error('suggest ' + r.status);
+                    return r.json();
+                }).then(function(s) {
                 if (Array.isArray(s) && s.length > 0) {
                     gid('suggestions').innerHTML = s.map(function(sg, i) {
                         return '<div onclick="selectSuggestion(\'' + es(sg).replace(/'/g, "\\'") + '\')" class="px-4 py-3 hover:bg-white/10 cursor-pointer text-sm animate-card-left flex items-center gap-3 transition-colors" style="animation-delay:' + Math.min(i * 25, 250) + 'ms"><i data-lucide="search" class="w-3.5 h-3.5 text-white/70"></i><span>' + es(sg) + '</span></div>';
@@ -271,7 +278,10 @@ var Search = {
                 } else {
                     gid('suggestions').classList.add('hidden');
                 }
+            }).catch(function() {
+                gid('suggestions').classList.add('hidden');
             });
+            }, 180);
         });
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#search-form') && !e.target.closest('#suggestions'))
