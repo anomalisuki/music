@@ -364,8 +364,8 @@ var Artist={
 
         if (navigator.share) {
             navigator.share({
-                title: name + ' - NanzMusify',
-                text: 'Dengarkan lagu & album terbaik dari ' + name + ' di NanzMusify!',
+                title: name + ' - VidzzMusify',
+                text: 'Dengarkan lagu & album terbaik dari ' + name + ' di VidzzMusify!',
                 url: url
             }).catch(function() {});
         } else {
