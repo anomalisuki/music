@@ -38,7 +38,7 @@ var Home = {
         <div class="pt-8 pb-3.5 px-4 sticky top-0 z-30 border-b border-white/10 shadow-2xl transition-all" style="background: linear-gradient(180deg, rgba(8, 9, 13, 0.4) 0%, rgba(8, 9, 13, 0.75) 100%), url('/banner.png') center/cover no-repeat; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <div class="flex justify-between items-center mb-3">
                 <div>
-                    <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-md">NanzMusify</h1>
+                    <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-md">VidzzMusify</h1>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <button onclick="App.switch('search')" class="w-10 h-10 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/90 hover:text-white hover:bg-black/60 active:scale-95 transition-all shadow-lg" title="Cari">
@@ -315,10 +315,10 @@ var Home = {
                         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-bold uppercase tracking-wider mb-2">
                             <i data-lucide="code" class="w-3 h-3"></i> Developer Profile
                         </div>
-                        <h2 class="text-2xl font-black text-white">Nanzz</h2>
-                        <p class="text-xs text-[#b3b3b3] mt-1 leading-relaxed">Pengembang & Pembuat NanzMusify. Selamat menikmati streaming musik favorit tanpa gangguan!</p>
+                        <h2 class="text-2xl font-black text-white">Vidzz</h2>
+                        <p class="text-xs text-[#b3b3b3] mt-1 leading-relaxed">Pengembang & Pembuat VidzzMusify. Selamat menikmati streaming musik favorit tanpa gangguan!</p>
                         <div class="flex flex-wrap items-center gap-2 mt-3.5 justify-center sm:justify-start">
-                            <a href="https://whatsapp.com/channel/0029VbCsS2r2phHIV3O0nO1a" target="_blank" class="btn-chrome px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
+                            <a href="https://whatsapp.com/channel/0029VbBZDhZ9hXFBRU0xuV12" target="_blank" class="btn-chrome px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
                                 <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Channel WA
                             </a>
                             <button onclick="App.switch('dev')" class="glass hover:bg-white/10 px-3.5 py-1.5 rounded-full text-xs font-medium text-white hover:text-white flex items-center gap-1.5 active:scale-95 transition-all">
