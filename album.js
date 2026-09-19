@@ -41,7 +41,7 @@ var Album = {
             <div class="w-10 h-10 border-3 border-[#cfd3d8] border-t-transparent rounded-full animate-spin"></div>
         </div>`;
         
-        fetch('https://nanzz-music.netlify.app/api/album?id=' + id)
+        fetch('/api/nanzz/album?id=' + id)
         .then(res => res.json())
         .then(data => {
             if(!data.status || !data.result) {
