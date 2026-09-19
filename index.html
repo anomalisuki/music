@@ -2,6 +2,10 @@
 <html lang="id">
 <head>
     <script>
+        // Same-origin Vercel proxy: avoids browser CORS/preflight failures.
+        window.NANZ_API_BASE = '/api/nanz';
+    </script>
+    <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
@@ -16,7 +20,7 @@
 <!-- This site is hosted on Netlify. Anyone can build and deploy a site
      like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=f9661c12-ba17-444d-9da8-b4396a12ef29
      Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
-<meta name="hosting-provider" content="Netlify">
+<meta name="hosting-provider" content="Vercel">
 <meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=f9661c12-ba17-444d-9da8-b4396a12ef29">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -498,17 +502,17 @@
     <div id="yt-player" style="position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;"></div>
     <audio id="audio-player" preload="auto" style="display:none;"></audio>
 
-    <script src="/player.js?v=16"></script>
-    <script src="/home.js?v=16"></script>
-    <script src="/search.js?v=16"></script>
-    <script src="/liked.js?v=16"></script>
-    <script src="/library.js?v=16"></script>
-    <script src="/profile.js?v=16"></script>
-    <script src="/miniplayer.js?v=16"></script>
-    <script src="/fullplayer.js?v=16"></script>
-    <script src="/artist.js?v=16"></script>
-    <script src="/album.js?v=16"></script>
-    <script src="/app.js?v=16"></script>
+    <script src="/player.js?v=17"></script>
+    <script src="/home.js?v=15"></script>
+    <script src="/search.js?v=15"></script>
+    <script src="/liked.js?v=15"></script>
+    <script src="/library.js?v=15"></script>
+    <script src="/profile.js?v=15"></script>
+    <script src="/miniplayer.js?v=17"></script>
+    <script src="/fullplayer.js?v=17"></script>
+    <script src="/artist.js?v=15"></script>
+    <script src="/album.js?v=15"></script>
+    <script src="/app.js?v=17"></script>
     <script>(function () {
   document.addEventListener('visibilitychange', function () {
     document.documentElement.classList.toggle('tab-hidden', document.hidden);
