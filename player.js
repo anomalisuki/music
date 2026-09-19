@@ -1,5 +1,5 @@
 // ============================================================
-// NANZMUSIFY - CORE PLAYER (FULL FIX)
+// VIDZZMUSIFY - CORE PLAYER (FULL FIX)
 // ============================================================
 const API_BASE=(window.NANZ_API_BASE||'/api/nanz').replace(/\/$/,''); window.NANZ_API_BASE=API_BASE; const API={search:API_BASE+'/search',artist:API_BASE+'/artist',suggest:API_BASE+'/suggest',lyrics:API_BASE+'/lyrics',ytplay:API_BASE+'/ytplay',proxyAudio:API_BASE+'/proxy-audio',proxyImage:API_BASE+'/proxy-image'};
 const FI='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2523374151%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%22100%2525%22%20height%3D%22100%2525%22%20fill%3D%22%252318181b%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%252327272a%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M9%2017V5l10-2v12%22%20stroke%3D%22%252352525b%22%20stroke-width%3D%221%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2217%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2215%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E';
@@ -80,9 +80,9 @@ function cn(t){if(!t)return'Unknown';return t.replace(/[^\x20-\x7E\xA0-\xFF\u010
 function gid(id){return document.getElementById(id);}
 
 function updateOG(title,image){
-    var t=document.querySelector('meta[property="og:title"]');if(!t){t=document.createElement('meta');t.setAttribute('property','og:title');document.head.appendChild(t);}t.setAttribute('content',title+' | NanzMusify');
+    var t=document.querySelector('meta[property="og:title"]');if(!t){t=document.createElement('meta');t.setAttribute('property','og:title');document.head.appendChild(t);}t.setAttribute('content',title+' | VidzzMusify');
     var i=document.querySelector('meta[property="og:image"]');if(!i){i=document.createElement('meta');i.setAttribute('property','og:image');document.head.appendChild(i);}i.setAttribute('content',image||FI);
-    document.title=title+' - NanzMusify';
+    document.title=title+' - VidzzMusify';
 }
 
 // ---- AUDIO ENGINE (elemen <audio> native, sumber stream dari /api/nanz/ytplay) ----
@@ -129,9 +129,9 @@ function updateMediaSessionMetadata(track){
     try{
         var cover = (typeof toHDCover==='function') ? toHDCover(track.cover, track.videoId||track.id) : (track.cover||FI);
         navigator.mediaSession.metadata = new MediaMetadata({
-            title: track.title || 'NanzMusify',
+            title: track.title || 'VidzzMusify',
             artist: track.artist || '',
-            album: 'NanzMusify',
+            album: 'VidzzMusify',
             artwork: [
                 {src: cover, sizes: '96x96', type: 'image/webp'},
                 {src: cover, sizes: '256x256', type: 'image/webp'},
@@ -751,8 +751,8 @@ function updateCoverWithTransition(imgEl, newSrc, origCover, useScale) {
 function updateOG(title, cover, artist) {
     if (title && cover) {
         var fullTitle = artist ? (title + ' - ' + artist) : title;
-        var docTitle = fullTitle + ' | NanzMusify';
-        var description = 'Dengarkan ' + fullTitle + ' di NanzMusify';
+        var docTitle = fullTitle + ' | VidzzMusify';
+        var description = 'Dengarkan ' + fullTitle + ' di VidzzMusify';
 
         document.title = docTitle;
 
@@ -769,17 +769,17 @@ function updateOG(title, cover, artist) {
 
     } else {
         var defaultCover = 'https://www.gobox.my.id/file/R0ym4wqfznmp.png';
-        document.title = 'NanzMusify';
+        document.title = 'VidzzMusify';
 
-        setMetaTag('og:title', 'NanzMusify', true);
-        setMetaTag('og:description', 'NanzMusify - Web Music Player', true);
+        setMetaTag('og:title', 'VidzzMusify', true);
+        setMetaTag('og:description', 'VidzzMusify - Web Music Player', true);
         setMetaTag('og:image', defaultCover, true);
         setMetaTag('og:image:width', '600', true);
         setMetaTag('og:image:height', '600', true);
         setMetaTag('og:url', location.href, true);
         setMetaTag('twitter:card', 'summary_large_image', false);
-        setMetaTag('twitter:title', 'NanzMusify', false);
-        setMetaTag('twitter:description', 'NanzMusify - Web Music Player', false);
+        setMetaTag('twitter:title', 'VidzzMusify', false);
+        setMetaTag('twitter:description', 'VidzzMusify - Web Music Player', false);
         setMetaTag('twitter:image', defaultCover, false);
 
     }
@@ -788,8 +788,8 @@ function updateOG(title, cover, artist) {
 function updateOGForArtist(artistName, coverUrl) {
     if (!artistName) return;
     var name = cn(artistName);
-    var docTitle = name + ' - Artist | NanzMusify';
-    var description = 'Dengarkan lagu dan album terbaik dari ' + name + ' di NanzMusify';
+    var docTitle = name + ' - Artist | VidzzMusify';
+    var description = 'Dengarkan lagu dan album terbaik dari ' + name + ' di VidzzMusify';
     var cover = (coverUrl && coverUrl !== FI) ? coverUrl : 'https://www.gobox.my.id/file/R0ym4wqfznmp.png';
 
     document.title = docTitle;
@@ -811,8 +811,8 @@ function updateOGForAlbum(albumTitle, coverUrl, artistName) {
     if (!albumTitle) return;
     var title = albumTitle;
     var fullTitle = artistName ? (title + ' - ' + artistName) : title;
-    var docTitle = fullTitle + ' - Album | NanzMusify';
-    var description = 'Dengarkan album ' + fullTitle + ' di NanzMusify';
+    var docTitle = fullTitle + ' - Album | VidzzMusify';
+    var description = 'Dengarkan album ' + fullTitle + ' di VidzzMusify';
     var cover = (coverUrl && coverUrl !== FI) ? coverUrl : 'https://www.gobox.my.id/file/R0ym4wqfznmp.png';
 
     document.title = docTitle;
@@ -2178,7 +2178,7 @@ function openShareCard() {
             '<div class="flex justify-between w-full text-[9px] text-[#6b7280] font-mono mt-1"><span>1:48</span><span>2:56</span></div>' +
             '<div class="border-t border-white/5 w-full pt-3 mt-1 flex items-center justify-center gap-1.5">' +
                 '<i data-lucide="music" class="w-3.5 h-3.5 text-[#a0a5b0]"></i>' +
-                '<span class="text-[10px] text-[#6b7280] tracking-wider font-semibold uppercase">NanzMusify Web App</span>' +
+                '<span class="text-[10px] text-[#6b7280] tracking-wider font-semibold uppercase">VidzzMusify Web App</span>' +
             '</div>' +
         '</div>' +
         
@@ -2217,7 +2217,7 @@ function triggerNativeShare() {
     if (navigator.share) {
         navigator.share({
             title: S.ct.title,
-            text: 'Dengarkan ' + S.ct.title + ' - ' + S.ct.artist + ' di NanzMusify!',
+            text: 'Dengarkan ' + S.ct.title + ' - ' + S.ct.artist + ' di VidzzMusify!',
             url: url
         }).catch(function() {});
     } else {
@@ -2281,12 +2281,12 @@ function downloadShareCard() {
         
         ctx.fillStyle = isLight ? '#a0aec0' : '#4a5568';
         ctx.font = '16px monospace';
-        ctx.fillText('DIDENGARKAN DI NANZMUSIFY', 300, 710);
+        ctx.fillText('DIDENGARKAN DI VIDZZMUSIFY', 300, 710);
         
         try {
             var dataUrl = canvas.toDataURL('image/png');
             var a = document.createElement('a');
-            a.download = S.ct.title.replace(/[^a-zA-Z0-9]/g, '_') + '_nanzmusify.png';
+            a.download = S.ct.title.replace(/[^a-zA-Z0-9]/g, '_') + '_vidzzmusify.png';
             a.href = dataUrl;
             a.click();
             showToast('Berhasil mengunduh Share Card!');
@@ -2306,12 +2306,12 @@ function downloadShareCard() {
         
         ctx.fillStyle = isLight ? '#a0aec0' : '#4a5568';
         ctx.font = '16px monospace';
-        ctx.fillText('DIDENGARKAN DI NANZMUSIFY', 300, 710);
+        ctx.fillText('DIDENGARKAN DI VIDZZMUSIFY', 300, 710);
         
         try {
             var dataUrl = canvas.toDataURL('image/png');
             var a = document.createElement('a');
-            a.download = S.ct.title.replace(/[^a-zA-Z0-9]/g, '_') + '_nanzmusify.png';
+            a.download = S.ct.title.replace(/[^a-zA-Z0-9]/g, '_') + '_vidzzmusify.png';
             a.href = dataUrl;
             a.click();
             showToast('Berhasil mengunduh Share Card (tanpa cover)!');
