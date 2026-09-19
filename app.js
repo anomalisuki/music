@@ -50,6 +50,7 @@ function clearPwaCache() {
     }
     localStorage.removeItem('pwa_lyrics_cache');
     localStorage.removeItem('pwa_audio_cache');
+    if ('caches' in window) caches.delete('nanzmusify-audio-v1').catch(function(){});
     if (typeof lyricsCache !== 'undefined') lyricsCache = {};
     if (typeof audioUrlCache !== 'undefined') audioUrlCache = {};
     showToast('Cache offline PWA berhasil dibersihkan');
@@ -171,6 +172,7 @@ async function saveTrackForOffline(track) {
         // Remove from offline
         list.splice(existingIndex, 1);
         try { localStorage.setItem('pwa_offline_tracks', JSON.stringify(list)); } catch(e){}
+        deleteOfflineAudio(vid);
         showToast('Lagu dihapus dari Mode Offline PWA');
         updateOfflineButtons();
         if (typeof OfflineView !== 'undefined' && typeof S !== 'undefined' && S.at === 'offline') OfflineView.render();
@@ -206,6 +208,7 @@ async function saveTrackForOffline(track) {
             if (d && d.result && d.result.download && d.result.download.audio) {
                 audioUrlCache[vid] = d.result.download.audio;
                 if (typeof savePwaCaches === 'function') savePwaCaches();
+                await cacheOfflineAudio(vid, audioUrlCache[vid]);
             }
         }
     } catch(e) {}
@@ -244,6 +247,11 @@ async function saveTrackForOffline(track) {
     showToast('Lagu "' + track.title + '" tersimpan untuk Mode Offline!');
     updateOfflineButtons();
     if (typeof OfflineView !== 'undefined' && typeof S !== 'undefined' && S.at === 'offline') OfflineView.render();
+    if (!await hasOfflineAudio(vid) && navigator.onLine) {
+        showToast('Metadata tersimpan, tetapi audio offline gagal dicache. Coba simpan lagi.');
+        return false;
+    }
+    showToast('Lagu berhasil disimpan untuk Offline');
     return true;
 }
 
@@ -411,6 +419,7 @@ var App={
         </div>`;
         
         Profile.render();
+        if(!history.state || !history.state.nanzmusify){ history.replaceState({nanzmusify:true,route:location.pathname},'',location.href); }
         
         MP.init();FullPlayer.init();Artist.init();Album.init();Home.render();Search.render();
         if(typeof updateOG==='function') updateOG(null);
@@ -418,15 +427,15 @@ var App={
         lucide.createIcons();
         setTimeout(function(){ App.checkUrl(); }, 1000);
         window.addEventListener('popstate', function(e) {
-            if (typeof Album !== 'undefined' && gid('album-modal') && gid('album-modal').style.display !== 'none') {
-                gid('album-modal').style.display = 'none';
-                gid('album-content').innerHTML = '';
-                Album.currentAlbumId = null;
-            }
-            if (typeof Artist !== 'undefined' && gid('artist-modal') && gid('artist-modal').style.display !== 'none') {
-                gid('artist-modal').style.display = 'none';
-                gid('artist-content').innerHTML = '';
-                Artist.currentArtistId = null;
+            var path=window.location.pathname;
+            if(typeof Album!=='undefined'&&gid('album-modal')&&gid('album-modal').style.display!=='none'){gid('album-modal').style.display='none';gid('album-content').innerHTML='';Album.currentAlbumId=null;return;}
+            if(typeof Artist!=='undefined'&&gid('artist-modal')&&gid('artist-modal').style.display!=='none'){gid('artist-modal').style.display='none';gid('artist-content').innerHTML='';Artist.currentArtistId=null;return;}
+            if(!path.startsWith('/play/')){
+                try{if(typeof AU!=='undefined'){AU.pause();AU.removeAttribute('src');AU.load();}}catch(e){}
+                if(typeof S!=='undefined'){S.ip=false;S.il=false;}
+                if(typeof FullPlayer!=='undefined'&&FullPlayer.close)FullPlayer.close();
+                if(typeof MP!=='undefined'&&MP.hide)MP.hide();
+                if(path==='/'&&typeof App!=='undefined'&&typeof S!=='undefined'&&S.at!=='home')App.switch('home');
             }
         });
     },
