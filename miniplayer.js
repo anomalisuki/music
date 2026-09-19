@@ -270,6 +270,6 @@ var MP={
             }
         };
         img.onerror = function() {}; // silently keep the hash fallback if the image can't be read
-        img.src = 'https://nanzz-music.netlify.app/api/proxy-image?url=' + encodeURIComponent(track.cover);
+        img.src = '/api/nanzz/proxy-image?url=' + encodeURIComponent(track.cover);
     }
 };
