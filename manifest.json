@@ -1,8 +1,8 @@
 {
   "id": "musify.nanzz-dev.xyz",
-  "name": "NanzMusify",
-  "short_name": "NanzMusify",
-  "description": "NanzMusify - Streaming Musik YouTube dengan Lirik",
+  "name": "VidzzMusify",
+  "short_name": "VidzzMusify",
+  "description": "VidzzMusify - Streaming Musik YouTube dengan Lirik",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
