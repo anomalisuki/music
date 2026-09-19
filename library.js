@@ -157,9 +157,9 @@ var Library={
         var pl = pls.find(function(p){return p.id===id;});
         if(!pl) return;
         var url = location.origin + '/playlist/' + id;
-        var text = 'Dengarkan playlist "' + pl.name + '" (' + pl.songs.length + ' lagu) di NanzMusify!';
+        var text = 'Dengarkan playlist "' + pl.name + '" (' + pl.songs.length + ' lagu) di VidzzMusify!';
         if (navigator.share) {
-            navigator.share({ title: pl.name + ' - NanzMusify', text: text, url: url }).catch(function(){});
+            navigator.share({ title: pl.name + ' - VidzzMusify', text: text, url: url }).catch(function(){});
         } else {
             navigator.clipboard.writeText(url).then(function(){
                 showToast('Link playlist berhasil disalin!');
