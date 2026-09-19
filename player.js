@@ -1,7 +1,24 @@
 // ============================================================
 // NANZMUSIFY - CORE PLAYER (FULL FIX)
 // ============================================================
-const API={search:'https://nanzz-music.netlify.app/api/search',artist:'https://nanzz-music.netlify.app/api/artist',suggest:'https://nanzz-music.netlify.app/api/suggest',lyrics:'https://nanzz-music.netlify.app/api/lyrics',ytplay:'https://nanzz-music.netlify.app/api/ytplay'};
+// Runtime API configuration. Override with window.NANZMUSIFY_CONFIG = { API_BASE: 'https://your-api.example/api' } before player.js.
+const API_BASE=(window.NANZMUSIFY_CONFIG&&window.NANZMUSIFY_CONFIG.API_BASE)
+    ? String(window.NANZMUSIFY_CONFIG.API_BASE).replace(/\/$/,'')
+    : 'https://nanzz-music.netlify.app/api';
+const API={
+    search:API_BASE+'/search', artist:API_BASE+'/artist', suggest:API_BASE+'/suggest',
+    lyrics:API_BASE+'/lyrics', ytplay:API_BASE+'/ytplay'
+};
+const API_PROXY=(window.NANZMUSIFY_CONFIG&&window.NANZMUSIFY_CONFIG.AUDIO_PROXY)
+    ? String(window.NANZMUSIFY_CONFIG.AUDIO_PROXY).replace(/\/$/,'')
+    : API_BASE+'/proxy-audio';
+async function fetchJson(url, options={}, timeoutMs=15000){
+    var controller=typeof AbortController!=='undefined'?new AbortController():null;
+    var timer=controller?setTimeout(function(){controller.abort();},timeoutMs):null;
+    try{var opts=Object.assign({},options);if(controller)opts.signal=controller.signal;var r=await fetch(url,opts);if(!r.ok)throw new Error('HTTP '+r.status);var text=await r.text();if(!text)throw new Error('Empty response');return JSON.parse(text);}
+    finally{if(timer)clearTimeout(timer);}
+}
+
 const FI='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2523374151%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%22100%2525%22%20height%3D%22100%2525%22%20fill%3D%22%252318181b%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%252327272a%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M9%2017V5l10-2v12%22%20stroke%3D%22%252352525b%22%20stroke-width%3D%221%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2217%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2215%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E';
 
 function toWebp(url) {
@@ -99,9 +116,14 @@ AU.addEventListener('timeupdate',function(){
 AU.addEventListener('play',function(){S.ip=true;S.il=false;UB();SP();try{AU.playbackRate=S.playbackRate||1.0;}catch(ex){}});
 AU.addEventListener('pause',function(){if(!AU.ended){S.ip=false;UB();ST();}});
 AU.addEventListener('waiting',function(){S.il=true;UB();});
-AU.addEventListener('playing',function(){S.il=false;UB();});
+AU.addEventListener('playing',function(){S.il=false;audioErrorRetry=0;UB();});
 AU.addEventListener('ended',function(){ST();if(typeof handleTrackEnded==='function'&&handleTrackEnded())return;if(S.rm==='one'){AU.currentTime=0;AU.play().catch(function(){});}else if(S.autoNext){NX();}else{S.ip=false;UB();}});
-AU.addEventListener('error',function(){if(AU.src){S.il=false;S.ip=false;UB();}});
+var audioErrorRetry=0;
+AU.addEventListener('error',function(){
+    if(!AU.src)return;var current=S.ct;S.il=false;S.ip=false;UB();
+    if(current&&audioErrorRetry<1&&navigator.onLine){audioErrorRetry++;var vid=current.videoId||current.id,raw=audioUrlCache[vid];if(raw)setTimeout(function(){if(S.ct!==current)return;AU.pause();AU.removeAttribute('crossorigin');AU.src=raw;AU.load();AU.play().catch(function(){});},250);return;}
+    audioErrorRetry=0;if(typeof showToast==='function')showToast('Audio gagal diputar. Coba putar lagi atau gunakan lagu lain.');
+});
 
 // ---- MEDIA SESSION (kontrol next/prev/play/pause di notifikasi & lockscreen) ----
 if('mediaSession' in navigator){
@@ -240,6 +262,15 @@ function savePwaCaches() {
     } catch(e) {}
 }
 
+const OFFLINE_AUDIO_CACHE='nanzmusify-audio-v1';
+function offlineAudioKey(vid){return location.origin+'/offline-audio/'+encodeURIComponent(vid);}
+async function cacheOfflineAudio(vid,audioUrl){
+    if(!vid||!audioUrl||!('caches' in window))return false;
+    try{var key=offlineAudioKey(vid);var r=await fetch(API_PROXY+'?url='+encodeURIComponent(audioUrl),{cache:'no-store'});if(!r.ok)throw new Error('Audio cache HTTP '+r.status);var c=await caches.open(OFFLINE_AUDIO_CACHE);await c.put(key,r.clone());return true;}catch(e){console.warn('[Offline] audio cache failed:',e);return false;}
+}
+async function hasOfflineAudio(vid){if(!vid||!('caches' in window))return false;try{return !!(await caches.match(offlineAudioKey(vid)));}catch(e){return false;}}
+async function deleteOfflineAudio(vid){if(!vid||!('caches' in window))return;try{var c=await caches.open(OFFLINE_AUDIO_CACHE);await c.delete(offlineAudioKey(vid));}catch(e){}}
+
 var hasPrefetchedNext = false;
 var isPreloadingNext = false;
 
@@ -302,7 +333,7 @@ async function triggerPreloadNextTrack(){
                 var rawAudioUrl = d.result.download.audio;
                 audioUrlCache[nextVid] = rawAudioUrl;
 
-                var srcUrl = (typeof audioCtx !== 'undefined' && audioCtx) ? ('https://nanzz-music.netlify.app/api/proxy-audio?url=' + encodeURIComponent(rawAudioUrl)) : rawAudioUrl;
+                var srcUrl = (typeof audioCtx !== 'undefined' && audioCtx) ? (API_PROXY + '?url=' + encodeURIComponent(rawAudioUrl)) : rawAudioUrl;
                 var preAudio = new Audio();
                 preAudio.preload = 'auto';
                 preAudio.src = srcUrl;
@@ -891,6 +922,7 @@ function PK(s,i){
 
 function loadTrack(track,resumeAt){
     if(!track)return;
+    audioErrorRetry=0;
     hasPrefetchedNext = false;
     isPreloadingNext = false;
     ST();
@@ -921,11 +953,13 @@ async function fetchAudioAndPlay(track,resumeAt){
         }
         if(S.ct!==track)return;
         if(audioUrl){
-            if (typeof audioCtx !== 'undefined' && audioCtx) {
-                AU.src = 'https://nanzz-music.netlify.app/api/proxy-audio?url=' + encodeURIComponent(audioUrl);
+            var cachedOffline=await hasOfflineAudio(vid);
+            if(cachedOffline && !navigator.onLine){
+                AU.removeAttribute('crossorigin'); AU.src=offlineAudioKey(vid);
+            } else if(typeof audioCtx!=='undefined' && audioCtx){
+                AU.crossOrigin='anonymous'; AU.src=API_PROXY+'?url='+encodeURIComponent(audioUrl);
             } else {
-                AU.removeAttribute('crossorigin');
-                AU.src = audioUrl;
+                AU.removeAttribute('crossorigin'); AU.src=audioUrl;
             }
             if(resumeAt){
                 var onMeta=function(){AU.currentTime=resumeAt;AU.removeEventListener('loadedmetadata',onMeta);};
