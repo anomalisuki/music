@@ -1,0 +1,6 @@
+const CACHE='nanzmusify-shell-v16';
+const AUDIO_CACHE='nanzmusify-audio-v1';
+const SHELL=['/','/index.html','/manifest.json','/logo.png','/banner.png','/player.js?v=16','/home.js?v=16','/search.js?v=16','/liked.js?v=16','/library.js?v=16','/profile.js?v=16','/miniplayer.js?v=16','/fullplayer.js?v=16','/artist.js?v=16','/album.js?v=16'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).catch(()=>{}));self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE&&k!==AUDIO_CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+self.addEventListener('fetch',e=>{const req=e.request,url=new URL(req.url);if(url.origin===location.origin&&url.pathname.startsWith('/offline-audio/')){e.respondWith(caches.match(req).then(r=>r||new Response('Offline audio not cached',{status:404})));return;}if(req.method!=='GET'||url.origin!==location.origin)return;if(req.mode==='navigate'||SHELL.some(p=>url.pathname===p.split('?')[0])){e.respondWith(fetch(req).then(res=>{caches.open(CACHE).then(c=>c.put(req,res.clone())).catch(()=>{});return res;}).catch(()=>caches.match(req).then(r=>r||caches.match('/index.html'))));}});
