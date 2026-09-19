@@ -1,8 +1,7 @@
 // ============================================================
 // NANZMUSIFY - CORE PLAYER (FULL FIX)
 // ============================================================
-const API_BASE=(window.NANZ_API_BASE||'/api/nanzz').replace(/\/$/,'');
-const API={search:API_BASE+'/search',artist:API_BASE+'/artist',suggest:API_BASE+'/suggest',lyrics:API_BASE+'/lyrics',ytplay:API_BASE+'/ytplay'};
+const API_BASE=(window.NANZ_API_BASE||'/api/nanz').replace(/\/$/,''); const API={search:API_BASE+'/search',artist:API_BASE+'/artist',suggest:API_BASE+'/suggest',lyrics:API_BASE+'/lyrics',ytplay:API_BASE+'/ytplay',proxyAudio:API_BASE+'/proxy-audio',proxyImage:API_BASE+'/proxy-image'};
 const FI='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2523374151%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%22100%2525%22%20height%3D%22100%2525%22%20fill%3D%22%252318181b%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%252327272a%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M9%2017V5l10-2v12%22%20stroke%3D%22%252352525b%22%20stroke-width%3D%221%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2217%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2215%22%20r%3D%223%22%20fill%3D%22%252352525b%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E';
 
 function toWebp(url) {
@@ -86,7 +85,7 @@ function updateOG(title,image){
     document.title=title+' - NanzMusify';
 }
 
-// ---- AUDIO ENGINE (elemen <audio> native, sumber stream dari /api/nanzz/ytplay) ----
+// ---- AUDIO ENGINE (elemen <audio> native, sumber stream dari /api/nanz/ytplay) ----
 var AU=gid('audio-player');
 if(!AU){AU=document.createElement('audio');AU.id='audio-player';AU.preload='auto';AU.style.display='none';document.body.appendChild(AU);}
 AU.addEventListener('timeupdate',function(){
@@ -303,7 +302,7 @@ async function triggerPreloadNextTrack(){
                 var rawAudioUrl = d.result.download.audio;
                 audioUrlCache[nextVid] = rawAudioUrl;
 
-                var srcUrl = (typeof audioCtx !== 'undefined' && audioCtx) ? ('/api/nanzz/proxy-audio?url=' + encodeURIComponent(rawAudioUrl)) : rawAudioUrl;
+                var srcUrl = (typeof audioCtx !== 'undefined' && audioCtx) ? (API.proxyAudio+'?url=' + encodeURIComponent(rawAudioUrl)) : rawAudioUrl;
                 var preAudio = new Audio();
                 preAudio.preload = 'auto';
                 preAudio.src = srcUrl;
@@ -923,7 +922,7 @@ async function fetchAudioAndPlay(track,resumeAt){
         if(S.ct!==track)return;
         if(audioUrl){
             if (typeof audioCtx !== 'undefined' && audioCtx) {
-                AU.src = '/api/nanzz/proxy-audio?url=' + encodeURIComponent(audioUrl);
+                AU.src = API.proxyAudio+'?url=' + encodeURIComponent(audioUrl);
             } else {
                 AU.removeAttribute('crossorigin');
                 AU.src = audioUrl;
@@ -2379,7 +2378,7 @@ function downloadCurrentSong(){
             if(d&&d.status&&d.result&&d.result.download&&d.result.download.audio){
                 var audioUrl=d.result.download.audio;
                 var a=document.createElement('a');
-                a.href='/api/nanzz/proxy-audio?url='+encodeURIComponent(audioUrl);
+                a.href=API.proxyAudio+'?url='+encodeURIComponent(audioUrl);
                 a.download=(S.ct.title||'lagu').replace(/[^a-zA-Z0-9]/g,'_')+'.mp3';
                 document.body.appendChild(a);
                 a.click();
